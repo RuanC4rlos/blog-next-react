@@ -2,10 +2,13 @@ import Link from "next/link";
 import { PostCoverImage } from "../PostCoverImage";
 import { PostHeading } from "../PostHeading";
 import { PostSummary } from "../PostSummary";
+import { postRepository } from "@/src/repositories/post";
+import { findAllPublicPosts } from "@/src/lib/post/queries";
 
-export function PostFeatured() {
-  const slug = "asdfasdf";
-  const postLink = `/post/${slug}`;
+export async function PostFeatured() {
+  const posts = await findAllPublicPosts();
+  const post = posts[0];
+  const postLink = `/post/${post.slug}`;
 
   return (
     <section className="grid grid-cols-1 gap-8 mb-16 sm:grid-cols-2 group">
@@ -16,8 +19,8 @@ export function PostFeatured() {
         imageProps={{
           width: 1200,
           height: 720,
-          src: "/images/bryen_9.png",
-          alt: "Alt da imagem",
+          src: post.coverImageUrl,
+          alt: post.title,
           priority: true,
         }}
       />
@@ -25,9 +28,9 @@ export function PostFeatured() {
       <PostSummary
         postLink={postLink}
         postHeading="h2"
-        createdAt={"2024-06-01T12:00:00Z"}
-        title={"Título do post em destaque"}
-        excerpt={"Excerpt do post em destaque"}
+        createdAt={post.createdAt}
+        title={post.title}
+        excerpt={post.excerpt}
       />
       <div></div>
     </section>
