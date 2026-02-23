@@ -1,6 +1,6 @@
 import { PostModel } from "@/src/models/post/post-model";
-import { resolve } from "path";
 import { readFile } from "fs/promises";
+import { resolve } from "path";
 
 const ROOT_DIR = process.cwd();
 const JSON_POSTS_FILE_PATH = resolve(
@@ -30,6 +30,12 @@ export class JsonPostRepository {
     await this.simulateWait();
     const posts = await this.readFromDisk();
     return posts.filter((post) => post.published);
+  }
+
+  async findAll(): Promise<PostModel[]> {
+    await this.simulateWait();
+    const posts = await this.readFromDisk();
+    return posts;
   }
 
   async findById(id: string): Promise<PostModel> {
