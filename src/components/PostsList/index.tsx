@@ -1,7 +1,6 @@
-import { postRepository } from "@/src/repositories/post";
+import { findAllPublicPostsCached } from "@/src/lib/post/queries/public";
 import { PostCoverImage } from "../PostCoverImage";
 import { PostSummary } from "../PostSummary";
-import { findAllPublicPostsCached } from "@/src/lib/post/queries";
 
 export async function PostsList() {
   const posts = await findAllPublicPostsCached();
