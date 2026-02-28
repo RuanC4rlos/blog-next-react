@@ -2,7 +2,8 @@
 
 import { createPostAction } from "@/src/actions/post/create-post-action";
 import { makePartialPublicPost, PublicPost } from "@/src/dto/post/dto";
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import { Button } from "../../Button";
 import { InputCheckbox } from "../../InputCheckbox";
 import { InputText } from "../../InputText";
@@ -22,6 +23,13 @@ export function ManagePostForm({ publicPost }: ManagePostFormProps) {
     createPostAction,
     initialState,
   );
+
+  useEffect(() => {
+    if (state.errors.length > 0) {
+      toast.dismiss();
+      state.errors.forEach((error) => toast.error(error));
+    }
+  }, [state.errors]);
 
   const { formState } = state;
   const [contentValue, setContentValue] = useState(publicPost?.content || "");
