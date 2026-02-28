@@ -1,5 +1,6 @@
 "use client";
 
+import { PublicPost } from "@/src/dto/post/dto";
 import { useState } from "react";
 import { Button } from "../../Button";
 import { InputCheckbox } from "../../InputCheckbox";
@@ -7,56 +8,81 @@ import { InputText } from "../../InputText";
 import { MarkdownEditor } from "../../MarkdownEditor";
 import { ImageUploader } from "../ImageUploader";
 
-export function ManagePostForm() {
-  const [contentValue, setContentValue] = useState("");
+type ManagePostFormProps = {
+  publicPost?: PublicPost;
+};
 
+export function ManagePostForm({ publicPost }: ManagePostFormProps) {
+  const [contentValue, setContentValue] = useState(publicPost?.content || "");
   return (
     <form action="" className="mb-16">
       <div className="flex flex-col gap-6">
         <InputText
-          labelText="Nome"
-          placeholder="Digite seu nome"
-          type="password"
+          labelText="ID"
+          name="id"
+          placeholder="ID gerado automaticamente"
+          type="text"
+          defaultValue={publicPost?.id || ""}
+          readOnly
         />
 
-        <ImageUploader />
-
-        <InputText labelText="Sobrenome" placeholder="Digite seu sobrenome" />
-
-        <InputCheckbox labelText="Sobrenome" />
+        <InputText
+          labelText="Slug"
+          name="slug"
+          placeholder="Slug gerada automaticamente"
+          type="text"
+          defaultValue={publicPost?.slug || ""}
+          readOnly
+        />
 
         <InputText
-          disabled
-          labelText="Sobrenome"
-          placeholder="Digite seu sobrenome"
-          defaultValue="Olá mundo"
+          labelText="Autor"
+          name="author"
+          placeholder="Digite o nome do autor"
+          type="text"
+          defaultValue={publicPost?.author || ""}
+        />
+
+        <InputText
+          labelText="Título"
+          name="title"
+          placeholder="Digite o título"
+          type="text"
+          defaultValue={publicPost?.title || ""}
+        />
+
+        <InputText
+          labelText="Excerto"
+          name="excerpt"
+          placeholder="Digite o resumo"
+          type="text"
+          defaultValue={publicPost?.excerpt || ""}
         />
 
         <MarkdownEditor
           labelText="Conteúdo"
-          disabled={false}
-          textAreaName="content"
           value={contentValue}
           setValue={setContentValue}
+          textAreaName="content"
+          disabled={false}
         />
 
+        <ImageUploader />
+
         <InputText
-          disabled
-          labelText="Sobrenome"
-          placeholder="Digite seu sobrenome"
-        />
-        <InputText
-          labelText="Sobrenome"
-          placeholder="Digite seu sobrenome"
-          readOnly
-        />
-        <InputText
-          labelText="Sobrenome"
-          placeholder="Digite seu sobrenome"
-          defaultValue="Olá mundo"
-          readOnly
+          labelText="URL da imagem de capa"
+          name="coverImageUrl"
+          placeholder="Digite a url da imagem"
+          type="text"
+          defaultValue={publicPost?.coverImageUrl || ""}
         />
 
+        <InputCheckbox
+          labelText="Publicar?"
+          name="published"
+          type="checkbox"
+          defaultChecked={publicPost?.published || false}
+        />
         <div className="mt-4">
           <Button type="submit">Enviar</Button>
         </div>
