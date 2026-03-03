@@ -7,12 +7,13 @@ import {
 } from "@/src/dto/post/dto";
 import { PostUpdateSchema } from "@/src/lib/post/validations";
 import { postRepository } from "@/src/repositories/post";
+import { makeRandomString } from "@/src/utils/make-random-string";
 import { revalidateTag } from "next/cache";
 
 type UpdatePostActionState = {
   formState: PublicPost;
   errors: string[];
-  success?: true;
+  success?: string;
 };
 
 export async function updatePostAction(
@@ -77,6 +78,6 @@ export async function updatePostAction(
   return {
     formState: makePublicPostFromDb(post),
     errors: [],
-    success: true,
+    success: makeRandomString(),
   };
 }
