@@ -1,10 +1,9 @@
 "use server";
 
-import { drizzleDb } from "@/src/db/drizzle";
-import { postsTable } from "@/src/db/drizzle/schemas";
 import { makePartialPublicPost, PublicPost } from "@/src/dto/post/dto";
 import { PostCreateSchema } from "@/src/lib/post/validations";
 import { PostModel } from "@/src/models/post/post-model";
+import { postRepository } from "@/src/repositories/post";
 import { makeSlugFromText } from "@/src/utils/make-slug-from-text";
 import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
@@ -47,8 +46,21 @@ export async function createPostAction(
     slug: makeSlugFromText(validPostData.title),
   };
 
-  await drizzleDb.insert(postsTable).values(newPost);
+  try {
+    await postRepository.create(newPost);
+  } catch (e: unknown) {
+    if (e instanceof Error) {
+      return {
+        formState: newPost,
+        errors: [e.message],
+      };
+    }
 
+    return {
+      formState: newPost,
+      errors: ["Erro desconhecido"],
+    };
+  }
   revalidateTag("posts", "max");
   redirect(`/admin/post/${newPost.id}`);
 }
